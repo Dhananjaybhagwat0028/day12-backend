@@ -1,6 +1,10 @@
 import { MongoClient } from "mongodb";
 import express from "express";
+import cors from "cors";
+// this cors feature is not available in the main branch basically for protection purpose
+
 const app = express();
+app.use(cors()); // allowing everyone.
 
 async function addrecord(req, res) {
   const uri = "mongodb://127.0.0.1:27017";
@@ -10,7 +14,7 @@ async function addrecord(req, res) {
   const messageColl = db.collection("message");
 
   let inputDoc = {
-    message: req.query.message || "default",
+    message: req.query.message || "record added",
   };
   await messageColl.insertOne(inputDoc);
 
@@ -20,7 +24,7 @@ async function addrecord(req, res) {
   // res.send("record added")
 
   // json response :: preferred
-  res.json({ opr: "success" });
+  res.json({ opr: "done" });
 }
 
 async function findAllMessage(req, res) {
