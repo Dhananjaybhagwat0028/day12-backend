@@ -87,6 +87,31 @@ async function findAllTodo(req, res) {
   }
 }
 
+async function registerRecord(req, res) {
+  try {
+    const uri = "mongodb://127.0.0.1:27017";
+    const client = new MongoClient(uri);
+
+    const db = client.db("Billpay");
+    const messageColl = db.collection("user");
+
+    let inputDoc = {
+      firstName: req.query.firstName,
+      lastName: req.query.lastName,
+      email: req.query.email,
+      contactNo: req.query.mobile,
+      aadharNo: req.query.email,
+    };
+    await messageColl.insertOne(inputDoc);
+
+    await client.close();
+
+    res.json({ opr: true });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
 async function addUserRecord(req, res) {
   try {
     const uri = "mongodb://127.0.0.1:27017";
@@ -188,6 +213,7 @@ app.post("/hello", helloPost);
 app.get("/addtodo", addTodo);
 app.get("/find-all-todo", findAllTodo);
 app.get("/adduser", addUserRecord);
+app.get("/registeruser", registerRecord);
 app.get("/find-all-user", findAllUser);
 app.get("/login-by-get", loginByGet);
 app.post("/login-by-post", loginByPost);
